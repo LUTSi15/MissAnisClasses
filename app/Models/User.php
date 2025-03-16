@@ -21,7 +21,13 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'fullname',
+        'age',
+        'gender',
+        'subject',
+        'sub_subject',
     ];
+    
 
     /**
      * The attributes that should be hidden for serialization.
@@ -44,5 +50,10 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function subjects()
+    {
+        return $this->hasMany(Subject::class, 'user_id');
     }
 }

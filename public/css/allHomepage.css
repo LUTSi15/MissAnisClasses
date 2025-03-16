@@ -1,0 +1,42 @@
+.navbar .btn-outline-light:hover {
+  color: #333;
+}
+
+.navbar {
+  transition: all 0.5s ease-in-out;
+}
+
+.navbar-sticky {
+  opacity: 0.9;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.navbar-nav .nav-item {
+  margin-right: 70px; /* Adjust this value to increase or decrease the gap */
+}
+
+.header {
+  background: url(../images/header-background.png) center no-repeat;
+  background-size: cover;
+}
+
+.icons {
+  background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url(../images/secondBackground.jpg) center no-repeat;
+  background-size: cover;
+}
+
+.form-group {
+  padding-top: 25px;
+}
+
+.modal-content {
+  background-color: rgba(0, 0, 0, 0.95);
+}
+
+.primaryButton {
+  background: linear-gradient(to right, rgb(255, 0, 0), rgb(153, 0, 0));
+}
+
+.darkButton {
+  background: linear-gradient(to right, rgb(79, 79, 79), rgb(181, 181, 181));
+}
