@@ -54,7 +54,7 @@
 
                             <div class="form-container p-4 mb-4">
                                 <!-- Form for Topic Name & Skill -->
-                                <div class="row g-3 mb-3">
+                                <div class="row">
                                     <!-- Topic Name (Dropdown + Input) -->
                                     <div class="col-md-6">
                                         <div class="input-group-label">

@@ -24,15 +24,30 @@ Route::middleware('auth')->group(function () {
     
 });
 
-Route::get('/students', [StudentController::class, 'registerStudent'])->name('registerStudent');
-Route::post('/students', [StudentController::class, 'storeStudent'])->name('storeStudent');
-Route::get('/students/{classroom_id}', [StudentController::class, 'viewListStudent'])->name('viewListStudent');
-Route::post('/storePerformance', [StudentController::class, 'storePerformance'])->name('storePerformance');
-Route::get('/performance/data', [StudentController::class, 'getPerformance'])->name('performance.data');
-Route::post('/storeAttendance', [StudentController::class, 'storeAttendance'])->name('storeAttendance');
-Route::get('/attendance/data', [StudentController::class, 'getAttendance'])->name('attendance.data');
-Route::post('/updateBehaviour/{id}', [StudentController::class, 'updateBehaviour'])->name('behaviour.update');
-Route::get('/viewStudent/{id}', [StudentController::class, 'viewStudent'])->name('viewStudent');
+Route::middleware(['auth', 'verified'])->group(function () {
+
+    // Student Registration
+    Route::get('/students', [StudentController::class, 'registerStudent'])->name('registerStudent');
+    Route::post('/students', [StudentController::class, 'storeStudent'])->name('storeStudent');
+
+    // View Student List
+    Route::get('/students/{classroom_id}', [StudentController::class, 'viewListStudent'])->name('viewListStudent');
+
+    // Performance
+    Route::post('/storePerformance', [StudentController::class, 'storePerformance'])->name('storePerformance');
+    Route::get('/performance/data', [StudentController::class, 'getPerformance'])->name('performance.data');
+
+    // Attendance
+    Route::post('/storeAttendance', [StudentController::class, 'storeAttendance'])->name('storeAttendance');
+    Route::get('/attendance/data', [StudentController::class, 'getAttendance'])->name('attendance.data');
+
+    // Behaviour
+    Route::post('/updateBehaviour/{id}', [StudentController::class, 'updateBehaviour'])->name('behaviour.update');
+
+    // View Student Detail
+    Route::get('/viewStudent/{id}', [StudentController::class, 'viewStudent'])->name('viewStudent');
+    
+});
 
 
 Route::post('/searchStudent', [StudentController::class, 'searchStudent'])->name('searchStudent');
