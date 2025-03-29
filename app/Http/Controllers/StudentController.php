@@ -9,6 +9,7 @@ use App\Models\Performance;
 use Illuminate\Http\Request;
 use App\Models\Student;
 use App\Models\Subject;
+use Illuminate\Support\Facades\Auth;
 
 class StudentController extends Controller
 {
@@ -17,12 +18,19 @@ class StudentController extends Controller
      */
     public function registerStudent()
     {
-        // Fetch all classrooms
-        $classrooms = Classroom::all();
+        $userId = Auth::id();
+        $user_classes = Subject::where('user_id', $userId)->get(); // Get multiple subjects
 
-        // Return the view with classrooms data
+        if ($user_classes->isEmpty()) {
+            return back()->with('error', 'No subjects found for this user.');
+        }
+
+        $classroomIds = $user_classes->pluck('classroom_id'); // Extract classroom IDs
+        $classrooms = Classroom::whereIn('id', $classroomIds)->get(); // Fetch related classrooms
+
         return view('manageStudent.registerStudent', compact('classrooms'));
     }
+
 
     public function storeStudent(Request $request)
     {
@@ -169,22 +177,35 @@ class StudentController extends Controller
         $request->validate([
             'action' => 'required|string|in:increase,decrease',
         ]);
-    
+
         $student = Student::findOrFail($id);
-    
+
         // Increase or Decrease the behaviour value
         if ($request->action === 'increase') {
             $student->behaviour += 1;
         } elseif ($request->action === 'decrease' && $student->behaviour > 0) {
             $student->behaviour -= 1;
         }
-    
+
         $student->save();
-    
+
         return response()->json([
             'success' => true,
             'new_behaviour' => $student->behaviour
         ]);
     }
-    
+
+    public function viewStudent($id)
+    {
+        $student = Student::with('performances', 'attendance', 'classroom')->find($id);
+        // dd($student);
+        return view('manageStudent.viewStudent',  compact('student'));
+    }
+
+    public function searchStudent(Request $request)
+    {
+        $student = Student::with('performances', 'attendance', 'classroom')->where('ic', $request->ic_number)->first();
+        // dd($student);
+        return view('manageStudent.viewChildren',  compact('student'));
+    }
 }

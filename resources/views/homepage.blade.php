@@ -2,7 +2,7 @@
 
 @section('content')
     <!-- Content -->
-    <div class="container pt-7 col-sm-5 col-md-6 col-lg-9 col-xxl-10 pb-6">
+    <div class="container col-sm-5 col-md-6 col-lg-9 col-xxl-10 pb-6">
 
         <!-- Laptop Grid -->
         <div class="container-fluid px-3">

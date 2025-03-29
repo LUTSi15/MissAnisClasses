@@ -32,6 +32,10 @@ Route::get('/performance/data', [StudentController::class, 'getPerformance'])->n
 Route::post('/storeAttendance', [StudentController::class, 'storeAttendance'])->name('storeAttendance');
 Route::get('/attendance/data', [StudentController::class, 'getAttendance'])->name('attendance.data');
 Route::post('/updateBehaviour/{id}', [StudentController::class, 'updateBehaviour'])->name('behaviour.update');
+Route::get('/viewStudent/{id}', [StudentController::class, 'viewStudent'])->name('viewStudent');
+
+
+Route::post('/searchStudent', [StudentController::class, 'searchStudent'])->name('searchStudent');
 
 
 require __DIR__.'/auth.php';

@@ -16,7 +16,10 @@
                     $performanceLevel = $performance ? $performance->{$skill} : null;
                 @endphp
                 <tr>
-                    <td class="align-middle fw-medium">{{ $student->name }}</td>
+                    <td class="align-middle fw-medium">
+                        <a href="{{ route('viewStudent', $student->id) }}">{{ $student->name }}
+                        </a>
+                    </td>
                     <td class="align-middle">
                         @if ($student->gender == 'Male')
                             <span class="badge gender-badge male-badge">
