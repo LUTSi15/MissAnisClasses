@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('gender');
             $table->string('ambition')->nullable();
             $table->integer('behaviour')->default(1); // Increase by 1 logic
+            $table->string('photo');
             $table->timestamps();
 
             $table->foreign('classroom_id')->references('id')->on('classrooms')->onDelete('cascade');

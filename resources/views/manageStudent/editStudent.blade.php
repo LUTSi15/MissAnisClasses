@@ -4,7 +4,7 @@
 <div class="container py-4">
     <div class="card shadow-sm">
         <div class="card-header bg-primary text-white">
-            <h3 class="mb-0"><i class="bi bi-person-plus-fill me-2"></i>Register New Student</h3>
+            <h3 class="mb-0"><i class="bi bi-pencil-square me-2"></i>Edit Student</h3>
         </div>
         <div class="card-body p-4">
             <!-- Success Message Alert -->
@@ -15,8 +15,9 @@
                 </div>
             @endif
 
-            <form action="{{ route('storeStudent') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('updateStudent', $student->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
+                @method('PUT')
 
                 <div class="row">
                     <!-- Left Column: Basic Details -->
@@ -26,7 +27,7 @@
                             <label for="name" class="form-label fw-bold">Student Name</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
-                                <input type="text" class="form-control" id="name" name="name" placeholder="Enter full name" required>
+                                <input type="text" class="form-control" id="name" name="name" value="{{ $student->name }}" required>
                             </div>
                         </div>
                         
@@ -35,7 +36,7 @@
                             <label for="ic" class="form-label fw-bold">IC number</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
-                                <input type="text" class="form-control" id="ic" name="ic" placeholder="Enter IC number" required>
+                                <input type="text" class="form-control" id="ic" name="ic" value="{{ $student->ic }}" required>
                             </div>
                         </div>
 
@@ -47,7 +48,7 @@
                                 <select class="form-select" id="classroom_id" name="classroom_id" required>
                                     <option value="">Select Classroom</option>
                                     @foreach ($classrooms as $classroom)
-                                        <option value="{{ $classroom->id }}">
+                                        <option value="{{ $classroom->id }}" {{ $student->classroom_id == $classroom->id ? 'selected' : '' }}>
                                             {{ $classroom->year }} {{ $classroom->name }}
                                         </option>
                                     @endforeach
@@ -60,13 +61,13 @@
                             <label class="form-label fw-bold">Gender</label>
                             <div class="d-flex">
                                 <div class="form-check me-4">
-                                    <input class="form-check-input" type="radio" name="gender" id="male" value="male" required>
+                                    <input class="form-check-input" type="radio" name="gender" id="male" value="male" {{ $student->gender == 'male' ? 'checked' : '' }} required>
                                     <label class="form-check-label" for="male">
                                         <i class="bi bi-gender-male me-1"></i> Male
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="gender" id="female" value="female">
+                                    <input class="form-check-input" type="radio" name="gender" id="female" value="female" {{ $student->gender == 'female' ? 'checked' : '' }}>
                                     <label class="form-check-label" for="female">
                                         <i class="bi bi-gender-female me-1"></i> Female
                                     </label>
@@ -86,8 +87,8 @@
                             </div>
                             <div id="photoHelp" class="form-text">Upload a clear photo of the student (JPEG, PNG, max 2MB)</div>
                             <div class="mt-2 text-center">
-                                <div class="border p-3 rounded" id="photoPreview" style="display: none;">
-                                    <img id="previewImage" src="#" alt="Photo Preview" style="max-height: 150px; max-width: 100%;" class="img-thumbnail">
+                                <div class="border p-3 rounded" id="photoPreview" style="display: {{ $student->photo ? 'block' : 'none' }};">
+                                    <img id="previewImage" src="{{ Storage::disk('s3')->url($student->photo) }}" alt="{{ $student->name }}" style="max-height: 150px; max-width: 100%;" class="img-thumbnail">
                                 </div>
                             </div>
                         </div>
@@ -97,7 +98,7 @@
                             <label for="ambition" class="form-label fw-bold">Ambition</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-star-fill"></i></span>
-                                <input type="text" class="form-control" id="ambition" name="ambition" placeholder="What does the student want to be?">
+                                <input type="text" class="form-control" id="ambition" name="ambition" value="{{ $student->ambition }}">
                             </div>
                         </div>
                     </div>
@@ -105,11 +106,8 @@
 
                 <!-- Submit Button -->
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                    {{-- <button type="button" class="btn btn-outline-warning me-md-2" onclick="resetForm()">
-                        <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
-                    </button> --}}
                     <button type="submit" class="btn btn-primary text-white">
-                        <i class="bi bi-save-fill me-1"></i> Register Student
+                        <i class="bi bi-save-fill me-1"></i> Update Student
                     </button>
                 </div>
             </form>

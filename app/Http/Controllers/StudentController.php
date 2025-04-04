@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\Student;
 use App\Models\Subject;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class StudentController extends Controller
 {
@@ -37,27 +38,104 @@ class StudentController extends Controller
         // Validate the input data
         $request->validate([
             'name' => 'required|string|max:255',
+            'ic' => 'required|string|max:255',
             'classroom_id' => 'required|exists:classrooms,id',
             'gender' => 'required|in:male,female',
             'ambition' => 'nullable|string|max:255',
             'presence' => 'nullable|integer|min:0',
             'absence' => 'nullable|integer|min:0',
             'behaviour' => 'nullable|integer|min:0',
+            'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        $photo_path = null;
+
+        // Upload and set visibility to public for the image
+        $photo_path = $request->file('photo')->store('students', 's3');
+        // dd($photo_path);
+        Storage::disk('s3')->setVisibility($photo_path, 'public'); // Set the visibility to public
 
         // Create a new student
         Student::create([
             'name' => $request->name,
             'classroom_id' => $request->classroom_id,
+            'ic' => $request->ic,
             'gender' => $request->gender,
             'ambition' => $request->ambition,
             'presence' => $request->presence ?? 0,
             'absence' => $request->absence ?? 0,
             'behaviour' => $request->behaviour ?? 0,
+            'photo' => $photo_path,
         ]);
 
         return redirect()->route('registerStudent')->with('success', 'Student created successfully.');
     }
+
+    /**
+     * edit the student in the database.
+     */
+    public function editStudent($id)
+    {
+        $userId = Auth::id();
+        $user_classes = Subject::where('user_id', $userId)->get(); // Get multiple subjects
+
+        if ($user_classes->isEmpty()) {
+            return back()->with('error', 'No subjects found for this user.');
+        }
+
+        $classroomIds = $user_classes->pluck('classroom_id'); // Extract classroom IDs
+        $classrooms = Classroom::whereIn('id', $classroomIds)->get(); // Fetch related classrooms
+        $student = Student::find($id);
+
+        return view('manageStudent.editStudent', compact('classrooms', 'student'));
+    }
+
+    public function updateStudent(Request $request, $id)
+    {
+        // Validate the input data
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'ic' => 'required|string|max:255',
+            'classroom_id' => 'required|exists:classrooms,id',
+            'gender' => 'required|in:male,female',
+            'ambition' => 'nullable|string|max:255',
+            'presence' => 'nullable|integer|min:0',
+            'absence' => 'nullable|integer|min:0',
+            'behaviour' => 'nullable|integer|min:0',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        // Find the student
+        $student = Student::findOrFail($id);
+
+        // Handle photo upload if a new one is provided
+        if ($request->hasFile('photo')) {
+            $photo_path = $request->file('photo')->store('students', 's3');
+            Storage::disk('s3')->setVisibility($photo_path, 'public'); // Set visibility to public
+
+            // Delete old photo if exists
+            if ($student->photo) {
+                Storage::disk('s3')->delete($student->photo);
+            }
+
+            $student->photo = $photo_path;
+        }
+
+        // Update student data
+        $student->update([
+            'name' => $request->name,
+            'classroom_id' => $request->classroom_id,
+            'ic' => $request->ic,
+            'gender' => $request->gender,
+            'ambition' => $request->ambition,
+            'presence' => $request->presence ?? $student->presence,
+            'absence' => $request->absence ?? $student->absence,
+            'behaviour' => $request->behaviour ?? $student->behaviour,
+        ]);
+
+        return redirect()->route('viewStudent', $id)->with('success', 'Student updated successfully.');
+    }
+
 
     public function viewListStudent($classroom_id)
     {

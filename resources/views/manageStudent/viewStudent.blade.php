@@ -7,7 +7,11 @@
                 <div class="d-flex align-items-center">
                     <h2 class="mb-0">Student Profile</h2>
                     <div class="ms-auto">
-                        <a href="#" class="btn btn-light btn-sm">
+                        
+                        <a href="{{ route('viewListStudent', $student->classroom->id) }}" class="btn btn-light btn-sm me-3">
+                            <i class="fas fa-chevron-left"></i> Back
+                        </a>
+                        <a href="{{ route('editStudent', $student->id) }}" class="btn btn-light btn-sm">
                             <i class="fas fa-edit"></i> Edit
                         </a>
                     </div>
@@ -21,9 +25,10 @@
                         <!-- Student Photo -->
                         <div class="col-md-4 text-center">
                             <div class="position-relative mb-3">
-                                <img src="../images/chameleon.png" alt="{{ $student->name }}"
+                                <img src="{{ Storage::disk('s3')->url($student->photo) }}" alt="{{ $student->name }}"
                                     class="img-thumbnail rounded-circle shadow"
                                     style="width: 200px; height: 200px; object-fit: cover; border: 5px solid white;">
+
 
                                 <!-- Fire Behavior Indicator -->
                                 <div class="position-absolute bottom-0 end-0">
@@ -502,7 +507,7 @@
                 }, 300)); // 300ms debounce
             }
         });
-        
+
         // Initialize tooltips
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
         var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {

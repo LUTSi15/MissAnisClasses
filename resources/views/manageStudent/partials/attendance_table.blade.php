@@ -14,11 +14,12 @@
             @endphp
 
             <tr>
-                <a href="{{ route('viewStudent', $student->id) }}">
-                    <td class="align-middle fw-medium">{{ $student->name }}</td>
-                </a>
+                <td class="align-middle fw-medium">
+                    <a href="{{ route('viewStudent', $student->id) }}">{{ $student->name }}
+                    </a>
+                </td>
                 <td class="align-middle">
-                    @if ($student->gender == 'Male')
+                    @if ($student->gender == 'male')
                         <span class="badge gender-badge male-badge">
                             <i class="bi bi-gender-male me-1"></i>Male
                         </span>

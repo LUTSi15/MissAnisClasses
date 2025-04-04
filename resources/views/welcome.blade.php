@@ -39,7 +39,7 @@
                     </div>
                     
                     <div class="d-grid gap-2 mb-3">
-                        <button type="submit" class="btn btn-primary">Verify</button>
+                        <button type="submit" class="btn btn-primary text-white">Find it</button>
                     </div>
                 </form>
                 

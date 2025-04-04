@@ -29,6 +29,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Student Registration
     Route::get('/students', [StudentController::class, 'registerStudent'])->name('registerStudent');
     Route::post('/students', [StudentController::class, 'storeStudent'])->name('storeStudent');
+    Route::get('/students/edit/{id}', [StudentController::class, 'editStudent'])->name('editStudent');
+    Route::put('/students/update/{id}', [StudentController::class, 'updateStudent'])->name('updateStudent');
 
     // View Student List
     Route::get('/students/{classroom_id}', [StudentController::class, 'viewListStudent'])->name('viewListStudent');

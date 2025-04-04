@@ -21,7 +21,7 @@
                         </a>
                     </td>
                     <td class="align-middle">
-                        @if ($student->gender == 'Male')
+                        @if ($student->gender == 'male')
                             <span class="badge gender-badge male-badge">
                                 <i class="bi bi-gender-male me-1"></i>Male
                             </span>

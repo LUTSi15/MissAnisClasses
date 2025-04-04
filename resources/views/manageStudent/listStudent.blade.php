@@ -256,7 +256,7 @@
                                                 @endphp
 
                                                 <tr>
-                                                    <td class="align-middle fw-medium">{{ $student->name }}</td>
+                                                    <td class="align-middle fw-medium"><a href="{{ route('viewStudent', $student->id) }}">{{ $student->name }}</a></td>
                                                     <td>
                                                         <div class="star-rating-container">
                                                             <div id="starCarousel-{{ $student->id }}"
@@ -299,7 +299,7 @@
                                                                                 <div class="level-indicator mb-2">
                                                                                     <span
                                                                                         class="badge rounded-pill {{ $colorClass }}-bg">
-                                                                                        Level {{ $level }}
+                                                                                        Level->{{ $level }}
                                                                                         ({{ $levelName }})
                                                                                         <span
                                                                                             class="ms-2 text-muted small">
@@ -310,7 +310,8 @@
                                                                                 <div class="flames-container">
                                                                                     @for ($i = 1; $i <= 20; $i++)
                                                                                         @if ($i <= $starsToShow)
-                                                                                            <div class="flame-wrapper {{ $colorClass }}">
+                                                                                            <div
+                                                                                                class="flame-wrapper {{ $colorClass }}">
                                                                                                 <i
                                                                                                     class="bi bi-fire flame-icon active"></i>
                                                                                             </div>
@@ -1049,10 +1050,14 @@
                             })
                         })
                         .then(response => {
+                            console.log("Response status:", response.status);
                             if (!response.ok) {
                                 throw new Error(`HTTP error! Status: ${response.status}`);
                             }
-                            return response.json();
+                            return response.json().then(json => {
+                                console.log("Parsed JSON:", json);
+                                return json;
+                            });
                         })
                         .then(data => {
                             // In your fetch response handler
@@ -1103,6 +1108,8 @@
                     carouselInstance.to(newLevel - 1);
                 }
                 console.log('carouselInstance: ' + carouselInstance);
+                console.log('Student: ' + studentId);
+                console.log('Behaviour: ' + newBehaviour);
 
                 // Update the flames in the current level
                 const activeSlide = carousel.querySelector('.carousel-item.active');
@@ -1110,8 +1117,7 @@
                 if (activeSlide) {
                     console.log('activeSlide: ' + activeSlide);
 
-                    const level = parseInt(activeSlide.querySelector('.badge.rounded-pill').textContent.match(
-                        /Level->(\d+)/)[1]);
+                    const level = parseInt(activeSlide.querySelector('.badge.rounded-pill').textContent.match(/Level->(\d+)/)[1]);
                     console.log('level: ' + level);
 
                     const startRange = (level - 1) * 20 + 1;
