@@ -2,6 +2,20 @@
 
 @section('content')
     <div class="container py-4">
+        <!-- Flash Message Alerts -->
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
         <div class="card shadow-sm">
             <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                 <h2 class="mb-0 fs-4">Class {{ $classroom->year }} {{ $classroom->name }} - Student Records</h2>
@@ -256,7 +270,9 @@
                                                 @endphp
 
                                                 <tr>
-                                                    <td class="align-middle fw-medium"><a href="{{ route('viewStudent', $student->id) }}">{{ $student->name }}</a></td>
+                                                    <td class="align-middle fw-medium"><a
+                                                            href="{{ route('viewStudent', $student->id) }}">{{ $student->name }}</a>
+                                                    </td>
                                                     <td>
                                                         <div class="star-rating-container">
                                                             <div id="starCarousel-{{ $student->id }}"
@@ -1117,7 +1133,8 @@
                 if (activeSlide) {
                     console.log('activeSlide: ' + activeSlide);
 
-                    const level = parseInt(activeSlide.querySelector('.badge.rounded-pill').textContent.match(/Level->(\d+)/)[1]);
+                    const level = parseInt(activeSlide.querySelector('.badge.rounded-pill').textContent.match(
+                        /Level->(\d+)/)[1]);
                     console.log('level: ' + level);
 
                     const startRange = (level - 1) * 20 + 1;

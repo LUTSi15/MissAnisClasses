@@ -11,6 +11,7 @@ use App\Models\Student;
 use App\Models\Subject;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class StudentController extends Controller
 {
@@ -38,7 +39,7 @@ class StudentController extends Controller
         // Validate the input data
         $request->validate([
             'name' => 'required|string|max:255',
-            'ic' => 'required|string|max:255',
+            'ic' => 'required|string|max:255|unique:students,ic',
             'classroom_id' => 'required|exists:classrooms,id',
             'gender' => 'required|in:male,female',
             'ambition' => 'nullable|string|max:255',
@@ -46,7 +47,10 @@ class StudentController extends Controller
             'absence' => 'nullable|integer|min:0',
             'behaviour' => 'nullable|integer|min:0',
             'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ], [
+            'ic.unique' => 'This IC number has already been used.', // optional custom error message
         ]);
+
 
         $photo_path = null;
 
@@ -95,7 +99,12 @@ class StudentController extends Controller
         // Validate the input data
         $request->validate([
             'name' => 'required|string|max:255',
-            'ic' => 'required|string|max:255',
+            'ic' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('students', 'ic')->ignore($id), // Allow current student's IC
+            ],
             'classroom_id' => 'required|exists:classrooms,id',
             'gender' => 'required|in:male,female',
             'ambition' => 'nullable|string|max:255',
@@ -103,7 +112,10 @@ class StudentController extends Controller
             'absence' => 'nullable|integer|min:0',
             'behaviour' => 'nullable|integer|min:0',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ], [
+            'ic.unique' => 'This IC number has already been used.', // Custom error message
         ]);
+
 
         // Find the student
         $student = Student::findOrFail($id);
@@ -134,6 +146,25 @@ class StudentController extends Controller
         ]);
 
         return redirect()->route('viewStudent', $id)->with('success', 'Student updated successfully.');
+    }
+
+    public function destroy($id)
+    {
+        $student = Student::find($id);
+        $classroom = $student->classroom_id;
+
+        if (!$student) {
+            return redirect()->route('viewListStudent', $classroom)->with('error', 'Student not found!');
+        }
+
+        // Optionally delete associated photo if you store it in the file system
+        if ($student->photo) {
+            Storage::disk('s3')->delete($student->photo);
+        }
+
+        $student->delete();
+
+        return redirect()->route('viewListStudent', $classroom)->with('success', 'Student deleted successfully!');
     }
 
 
@@ -282,8 +313,16 @@ class StudentController extends Controller
 
     public function searchStudent(Request $request)
     {
+        // Try to find the student with the provided IC number
         $student = Student::with('performances', 'attendance', 'classroom')->where('ic', $request->ic_number)->first();
-        // dd($student);
-        return view('manageStudent.viewChildren',  compact('student'));
+
+        // Check if student was found
+        if (!$student) {
+            // Redirect to the welcome page with an error message
+            return redirect('/')->with('error', 'Student not found with this IC number.');
+        }
+
+        // If student is found, return the view with the student data
+        return view('manageStudent.viewChildren', compact('student'));
     }
 }

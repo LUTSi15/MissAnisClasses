@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="icon" href="{{ asset('images/header.png') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Miss Anis Class</title>
+    <title>My Class Hub</title>
     <style>
     </style>
 </head>
@@ -24,31 +24,46 @@
         <main>
             <div class="form-container">
                 <div class="logo-container">
-                    <img src="{{ asset('images/header.png') }}" alt="Miss Anis Class Logo">
+                    <img src="{{ asset('images/header.png') }}" alt="My Class Hub Logo">
                 </div>
-                
-                <h2 class="form-title">Student Information</h2>
-                
+
+                <h2 class="form-title">Insert Student Identity Card Number</h2>
+
+                <!-- Flash Message Alerts -->
+                @if (session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
+                @if (session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
                 <form action="{{ route('searchStudent') }}" method="POST">
                     @csrf
                     <div class="mb-4">
                         <label for="ic_number" class="form-label">IC Number</label>
-                        <input type="text" class="form-control" id="ic_number" name="ic_number" 
+                        <input type="text" class="form-control" id="ic_number" name="ic_number"
                             placeholder="Enter your IC number" required>
                         <div class="form-text">Format example (12 digits): 123456789102</div>
                     </div>
-                    
+
                     <div class="d-grid gap-2 mb-3">
                         <button type="submit" class="btn btn-primary text-white">Find it</button>
                     </div>
                 </form>
-                
+
                 <div class="system-name">
-                    Miss Anis Class: Lets monitor our puppies
+                    My Class Hub: Lets monitor our puppies
                 </div>
             </div>
         </main>
-        
+
         <footer>
             <div class="container">
                 <div class="row g-3">
@@ -59,7 +74,7 @@
                     </div>
                     <div class="col-md-4 col-12">
                         <p class="text-md-end text-center">
-                            Miss Anis Class: Lets monitor our puppies
+                            My Class Hub: Lets monitor our pupils
                         </p>
                     </div>
                 </div>

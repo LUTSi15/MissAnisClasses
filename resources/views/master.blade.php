@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="icon" href="{{ asset('images/header.png') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Miss Anis Class</title>
+    <title>My Class Hub</title>
 </head>
 
 <body>
@@ -21,7 +21,7 @@
     <nav class="navbar navbar-expand-lg fixed-top navbar-light">
         <div class="container">
             <a href="{{ route('homepage') }}" class="navbar-brand">
-                <img src="{{ asset('images/logo.png') }}" alt="Miss Anis Class Logo" width="170">
+                <img src="{{ asset('images/logo.png') }}" alt="My Class Hub Logo" width="170">
             </a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" 
@@ -82,7 +82,7 @@
                     </div>
                     <div class="col-md-4 col-12">
                         <p class="text-md-end text-center">
-                            Miss Anis Class: Lets monitor our puppies
+                            My Class Hub: Lets monitor our pupils
                         </p>
                     </div>
                 </div>

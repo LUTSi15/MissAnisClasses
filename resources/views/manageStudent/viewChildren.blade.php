@@ -40,8 +40,8 @@
                             <!-- Student Photo -->
                             <div class="col-md-4 text-center">
                                 <div class="position-relative mb-3">
-                                    <img src="../images/chameleon.png" alt="{{ $student->name }}"
-                                        class="img-thumbnail rounded-circle shadow"
+                                    <img src="{{ Storage::disk('s3')->url($student->photo) }}"
+                                        alt="{{ $student->name }}" class="img-thumbnail rounded-circle shadow"
                                         style="width: 200px; height: 200px; object-fit: cover; border: 5px solid white;">
 
                                     <!-- Fire Behavior Indicator -->
@@ -457,111 +457,108 @@
             </div>
         </div>
 
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                // Initialize all carousels with enhanced options
-                var carousels = document.querySelectorAll('.carousel');
-                carousels.forEach(function(carousel) {
-                    // Add animation classes when carousel slides
-                    carousel.addEventListener('slide.bs.carousel', function(event) {
-                        let direction = event.direction === 'left' ? 'next' : 'prev';
-                        let activeItem = this.querySelector('.carousel-item.active');
-                        let nextItem = event.relatedTarget;
-
-                        // Add animation classes
-                        activeItem.classList.add('animate__animated', direction === 'next' ?
-                            'animate__fadeOutLeft' : 'animate__fadeOutRight');
-                        nextItem.classList.add('animate__animated', direction === 'next' ?
-                            'animate__fadeInRight' : 'animate__fadeInLeft');
-
-                        // Remove animation classes after transition completes
-                        setTimeout(function() {
-                            activeItem.classList.remove('animate__animated',
-                                'animate__fadeOutLeft', 'animate__fadeOutRight');
-                            nextItem.classList.remove('animate__animated',
-                                'animate__fadeInRight', 'animate__fadeInLeft');
-                        }, 600);
-                    });
-
-                    // Update indicator active state when slide changes
-                    carousel.addEventListener('slid.bs.carousel', function(event) {
-                        // Get the current slide index
-                        let activeIndex = event.to; // Bootstrap provides the new index in the event
-
-                        // Update the level indicators
-                        let carouselId = this.id;
-                        let indicators = document.querySelectorAll(
-                            `[data-bs-target="#${carouselId}"].level-indicator-btn`);
-
-                        indicators.forEach(function(indicator, index) {
-                            if (index === activeIndex) {
-                                indicator.classList.add('active');
-                            } else {
-                                indicator.classList.remove('active');
-                            }
-                        });
-                    });
-                });
-
-                // Add at the top of your JavaScript
-                function debounce(func, wait) {
-                    let timeout;
-                    return function(...args) {
-                        clearTimeout(timeout);
-                        timeout = setTimeout(() => func.apply(this, args), wait);
-                    };
-                }
-
-                // Update search implementation
-                const searchAttitude = document.getElementById('searchAttitude');
-                if (searchAttitude) {
-                    searchAttitude.addEventListener('input', debounce(function() {
-                        const searchTerm = this.value.toLowerCase();
-                        const rows = document.querySelectorAll('#attitude table tbody tr');
-
-                        rows.forEach(function(row) {
-                            const studentName = row.querySelector('td:first-child').textContent
-                                .toLowerCase();
-                            row.style.display = studentName.includes(searchTerm) ? '' : 'none';
-                        });
-                    }, 300)); // 300ms debounce
-                }
-            });
-
-            // Initialize tooltips
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-            var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl)
-            })
-
-            // Performance period filter functionality
-            document.getElementById('performancePeriod').addEventListener('change', function() {
-                // Filter functionality would go here
-                console.log('Filter by:', this.value);
-            });
-        </script>
-
-
-    </div>
-
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="row g-3">
-                <div class="col-md-8 col-12">
-                    <p class="text-md-start text-center">
-                        &copy; Ahmad Kholid Bin Khuzaini. All Rights Reserved 2025
-                    </p>
-                </div>
-                <div class="col-md-4 col-12">
-                    <p class="text-md-end text-center">
-                        Miss Anis Class: Lets monitor our puppies
-                    </p>
+        <!-- Footer -->
+        <footer>
+            <div class="container">
+                <div class="row g-3">
+                    <div class="col-md-8 col-12">
+                        <p class="text-md-start text-center">
+                            &copy; Ahmad Kholid Bin Khuzaini. All Rights Reserved 2025
+                        </p>
+                    </div>
+                    <div class="col-md-4 col-12">
+                        <p class="text-md-end text-center">
+                            Miss Anis Class: Lets monitor our puppies
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </footer>
+        </footer>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize all carousels with enhanced options
+            var carousels = document.querySelectorAll('.carousel');
+            carousels.forEach(function(carousel) {
+                // Add animation classes when carousel slides
+                carousel.addEventListener('slide.bs.carousel', function(event) {
+                    let direction = event.direction === 'left' ? 'next' : 'prev';
+                    let activeItem = this.querySelector('.carousel-item.active');
+                    let nextItem = event.relatedTarget;
+
+                    // Add animation classes
+                    activeItem.classList.add('animate__animated', direction === 'next' ?
+                        'animate__fadeOutLeft' : 'animate__fadeOutRight');
+                    nextItem.classList.add('animate__animated', direction === 'next' ?
+                        'animate__fadeInRight' : 'animate__fadeInLeft');
+
+                    // Remove animation classes after transition completes
+                    setTimeout(function() {
+                        activeItem.classList.remove('animate__animated',
+                            'animate__fadeOutLeft', 'animate__fadeOutRight');
+                        nextItem.classList.remove('animate__animated',
+                            'animate__fadeInRight', 'animate__fadeInLeft');
+                    }, 600);
+                });
+
+                // Update indicator active state when slide changes
+                carousel.addEventListener('slid.bs.carousel', function(event) {
+                    // Get the current slide index
+                    let activeIndex = event.to; // Bootstrap provides the new index in the event
+
+                    // Update the level indicators
+                    let carouselId = this.id;
+                    let indicators = document.querySelectorAll(
+                        `[data-bs-target="#${carouselId}"].level-indicator-btn`);
+
+                    indicators.forEach(function(indicator, index) {
+                        if (index === activeIndex) {
+                            indicator.classList.add('active');
+                        } else {
+                            indicator.classList.remove('active');
+                        }
+                    });
+                });
+            });
+
+            // Add at the top of your JavaScript
+            function debounce(func, wait) {
+                let timeout;
+                return function(...args) {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func.apply(this, args), wait);
+                };
+            }
+
+            // Update search implementation
+            const searchAttitude = document.getElementById('searchAttitude');
+            if (searchAttitude) {
+                searchAttitude.addEventListener('input', debounce(function() {
+                    const searchTerm = this.value.toLowerCase();
+                    const rows = document.querySelectorAll('#attitude table tbody tr');
+
+                    rows.forEach(function(row) {
+                        const studentName = row.querySelector('td:first-child').textContent
+                            .toLowerCase();
+                        row.style.display = studentName.includes(searchTerm) ? '' : 'none';
+                    });
+                }, 300)); // 300ms debounce
+            }
+        });
+
+        // Initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+
+        // Performance period filter functionality
+        document.getElementById('performancePeriod').addEventListener('change', function() {
+            // Filter functionality would go here
+            console.log('Filter by:', this.value);
+        });
+    </script>
 
     <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('js/script.js') }}"></script>

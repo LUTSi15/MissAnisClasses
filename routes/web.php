@@ -14,6 +14,7 @@ Route::get('/', function () {
 // })->middleware(['auth', 'verified'])->name('homepage');
 
 Route::get('/homepage', [HomepageController::class, 'homepage'])->middleware(['auth', 'verified'])->name('homepage');
+Route::post('/searchStudent', [StudentController::class, 'searchStudent'])->name('searchStudent');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -31,6 +32,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/students', [StudentController::class, 'storeStudent'])->name('storeStudent');
     Route::get('/students/edit/{id}', [StudentController::class, 'editStudent'])->name('editStudent');
     Route::put('/students/update/{id}', [StudentController::class, 'updateStudent'])->name('updateStudent');
+    Route::delete('/students/delete/{id}', [StudentController::class, 'destroy'])->name('deleteStudent');
 
     // View Student List
     Route::get('/students/{classroom_id}', [StudentController::class, 'viewListStudent'])->name('viewListStudent');
@@ -50,9 +52,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/viewStudent/{id}', [StudentController::class, 'viewStudent'])->name('viewStudent');
     
 });
-
-
-Route::post('/searchStudent', [StudentController::class, 'searchStudent'])->name('searchStudent');
-
 
 require __DIR__.'/auth.php';
